@@ -1,0 +1,1 @@
+"""Local MiniDBMS Web UI."""

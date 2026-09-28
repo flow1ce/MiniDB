@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MiniDB | Local database workspace</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="homepage.css">
+</head>
+<body class="home-page" data-theme="dark">
+  <header class="home-header">
+    <a class="home-brand" href="index.html" aria-label="MiniDB home"><span class="brand-orb"></span><b>MINIDB</b></a>
+    <div class="home-header-actions">
+      <span class="engine-state"><i></i> Local engine</span>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon">☼</span><span id="themeLabel">Light mode</span></button>
+      <a class="header-workbench" href="studio.html">Open workbench <span>↗</span></a>
+    </div>
+  </header>
+
+  <main class="home-main">
+    <section class="home-intro">
+      <div class="intro-copy">
+        <span class="eyebrow">LOCAL SQL WORKSPACE</span>
+        <h1>See every query<br><em>take shape.</em></h1>
+        <p>一个轻量的本地数据库实验台。输入 SQL，查看编译、优化、执行和存储路径，并把结果留在你的工作区中。</p>
+        <div class="intro-actions">
+          <a class="primary-action" href="studio.html">Open workbench <span>↗</span></a>
+          <a class="text-action" href="#capabilities">Explore capabilities <span>↓</span></a>
+        </div>
+      </div>
+      <div class="network" aria-label="MiniDB processing map">
+        <svg class="network-links" viewBox="0 0 100 100" aria-hidden="true">
+          <defs>
+            <filter id="link-glow" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="1.6" result="blur"></feGaussianBlur>
+              <feMerge>
+                <feMergeNode in="blur"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+              </feMerge>
+            </filter>
+          </defs>
+          <path d="M31 31 C42 26 61 27 75 33"></path>
+          <path d="M75 42 C76 53 60 63 40 73"></path>
+          <path d="M40 79 C51 84 64 84 75 77"></path>
+        </svg>
+        <div class="status-orb"><div class="orb-core">✓</div><span>ENGINE<br><b>READY</b></span></div>
+        <article class="source-card card-a"><span class="card-dot"></span><i></i><i></i><b>SQL INPUT</b><small>query.sql</small><span class="play">↗</span></article>
+        <article class="source-card card-b"><span class="card-dot"></span><i></i><i></i><b>LEXER</b><small>token stream</small><span class="play">↗</span></article>
+        <article class="source-card card-c"><span class="card-dot"></span><i></i><i></i><b>EXECUTOR</b><small>tuple batch</small><span class="play">↗</span></article>
+        <article class="source-card card-d"><span class="card-dot"></span><i></i><i></i><b>STORAGE</b><small>page_0 · hit</small><span class="play">↗</span></article>
+      </div>
+    </section>
+
+    <section class="capabilities" id="capabilities">
+      <div class="section-heading"><span class="eyebrow">BUILT FOR LEARNING</span><h2>A clear path from SQL to storage.</h2><p>每一步都可观察，适合课堂演示、调试和数据库系统实验。</p></div>
+      <div class="capability-grid">
+        <a class="capability" href="studio.html#pipeline"><span class="capability-number">01</span><h3>Execution pipeline</h3><p>从词法分析到执行返回，逐阶段查看查询如何被处理。</p><span class="capability-link">View pipeline ↗</span></a>
+        <a class="capability" href="studio.html#buffer"><span class="capability-number">02</span><h3>Storage visibility</h3><p>观察 Buffer Pool、页面命中和磁盘读写等运行状态。</p><span class="capability-link">Inspect storage ↗</span></a>
+        <a class="capability" href="studio.html#results"><span class="capability-number">03</span><h3>Readable results</h3><p>将查询结果整理成易读表格，并支持复制和导出 CSV。</p><span class="capability-link">See results ↗</span></a>
+      </div>
+    </section>
+  </main>
+  <footer class="home-footer"><span>MINIDB / Local database system</span><span>Python standard library · No external service</span></footer>
+  <script src="theme.js"></script>
+</body>
+</html>

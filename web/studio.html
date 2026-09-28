@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MiniDB 工作台</title>
+  <link rel="stylesheet" href="studio.css?v=9">
+</head>
+<body>
+  <header class="topbar">
+    <a class="back" href="index.html" aria-label="返回首页">←</a>
+    <div class="brand"><span class="brand-mark"></span><span>MINIDB</span><small>查询工作台</small></div>
+    <nav class="studio-nav" aria-label="工作台区域">
+      <a href="#pipeline">执行路径</a>
+      <a href="#results">结果集</a>
+      <a href="#buffer">缓冲池</a>
+    </nav>
+    <div class="top-context"><span class="signal"></span> 本地引擎 <b>已连接</b> · 会话 <b id="sessionBadge">连接中</b></div>
+    <button class="icon-btn" id="themeToggle" type="button" title="切换主题" aria-label="切换主题">◐</button>
+  </header>
+
+  <main class="studio-shell">
+    <aside class="sidebar">
+      <div class="side-head"><span class="eyebrow">连接</span><strong>本地 / minidb</strong><i class="live-dot"></i></div>
+      <button class="connection-row" id="connectionRow" type="button"><span class="db-glyph">▣</span><span class="connection-copy"><b>数据库 01</b><small>127.0.0.1:8080</small></span><span class="connection-state">ONLINE</span></button>
+      <nav class="tree" aria-label="数据库对象">
+        <div class="tree-label"><span>对象</span><span class="tree-summary" id="objectSummary">正在载入</span><button id="refreshTree" type="button" title="刷新对象列表" aria-label="刷新对象列表">↻</button></div>
+        <button class="tree-group open" type="button" aria-expanded="true" aria-controls="tableObjects"><span class="tree-caret">⌄</span> 表 <em id="tableCount">0</em></button>
+        <div class="tree-children" id="tableObjects"><p class="tree-empty">正在读取目录…</p></div>
+        <button class="tree-group" type="button" aria-expanded="false" aria-controls="indexObjects"><span class="tree-caret">›</span> 索引 <em id="indexCount">0</em></button>
+        <div class="tree-children collapsed" id="indexObjects"><p class="tree-empty">选择表以查看索引</p></div>
+        <button class="tree-group" type="button" aria-expanded="false" aria-controls="transactionObjects"><span class="tree-caret">›</span> 事务 <em id="transactionCount">0</em></button>
+        <div class="tree-children collapsed" id="transactionObjects"><p class="tree-empty">无活动事务</p></div>
+      </nav>
+      <div class="side-foot">
+        <div><span>缓冲策略</span><b id="bufferPolicy">—</b></div>
+        <div><span>页框</span><b id="bufferCapacity">—</b></div>
+        <div><span>隔离级别</span><b id="isolationLevel">READ COMMITTED</b></div>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <div class="workspace-head">
+        <div><span class="eyebrow">查询工作台</span><h1>编译一次，看清每一步</h1></div>
+        <div class="workspace-tools">
+          <button class="ghost-btn" id="newQuery" type="button">新建查询</button>
+          <button class="ghost-btn" id="explainBtn" type="button">查看计划</button>
+          <button class="ghost-btn" id="cacheBtn" type="button">缓存验证</button>
+          <button class="run-btn" id="runTop" type="button">运行查询 <span>Ctrl ↵</span></button>
+        </div>
+      </div>
+
+      <section class="editor-panel">
+        <div class="query-tabs"><div class="query-tab active"><span class="file-dot"></span>query.sql</div><span id="savedState">刚刚保存</span></div>
+        <div class="editor-toolbar"><div><span class="language">SQL</span><button id="formatBtn" type="button">格式化</button><button id="clearBtn" type="button">清空</button></div><span>Ctrl / Cmd + Enter 运行</span></div>
+        <div class="editor-wrap"><div class="line-numbers" id="lineNumbers"></div><textarea id="sqlEditor" spellcheck="false">SHOW TABLES;</textarea></div>
+        <div class="editor-footer"><span>第 1 行，第 1 列</span><span id="queryStatus">等待执行</span></div>
+      </section>
+
+      <section class="pipeline-panel" id="pipeline">
+        <div class="section-head"><div><span class="eyebrow">执行路径</span><h2>从文本到结果行</h2></div><span class="run-time" id="runTime">空闲</span></div>
+        <div class="pipeline" id="pipelineSteps">
+          <button class="pipe-stage done" data-stage="parse" type="button"><span>01</span><b>词法分析</b><small>词元</small></button><i></i>
+          <button class="pipe-stage" data-stage="semantic" type="button"><span>02</span><b>语义检查</b><small>表结构</small></button><i></i>
+          <button class="pipe-stage" data-stage="plan" type="button"><span>03</span><b>生成计划</b><small>连接图</small></button><i></i>
+          <button class="pipe-stage" data-stage="optimize" type="button"><span>04</span><b>优化重写</b><small>规则</small></button><i></i>
+          <button class="pipe-stage" data-stage="buffer" type="button"><span>05</span><b>缓冲池</b><small>数据页</small></button><i></i>
+          <button class="pipe-stage" data-stage="execute" type="button"><span>06</span><b>执行返回</b><small>结果行</small></button>
+        </div>
+        <div class="stage-detail" id="stageDetail">点击一个阶段，查看这条查询背后的实际工作。</div>
+      </section>
+
+      <section class="result-panel" id="results">
+        <div class="section-head"><div><span class="eyebrow">结果集</span><h2 id="resultTitle">等待查询</h2></div><div class="result-tools"><span class="result-mode">REAL ENGINE</span><button id="copyBtn" type="button">复制</button><button id="csvBtn" type="button">下载 CSV</button></div></div>
+        <div class="result-table-wrap"><div id="resultCards" class="result-cards" hidden></div><table id="resultTable"><thead></thead><tbody></tbody></table><pre id="resultMessage" class="result-message">运行 SQL 后将在这里显示真实结果。</pre></div>
+        <div class="result-foot"><span id="resultMeta">返回 0 行</span><span>本地快照 · 已提交读</span></div>
+      </section>
+    </section>
+
+    <aside class="inspector">
+      <div class="inspector-head"><div><span class="eyebrow">可观测性</span><h2>执行洞察</h2></div><span class="inspector-live">实时</span></div>
+      <section class="insight-block summary-block"><div class="summary-grid"><div><span>耗时</span><b id="elapsed">—</b></div><div><span>结果行</span><b id="rowCount">0</b></div><div><span>扫描</span><b id="scanType">—</b></div><div><span>计划</span><b id="planType">—</b></div></div></section>
+      <section class="insight-block buffer-block" id="buffer"><div class="block-title"><div><span class="eyebrow">存储引擎</span><h3>缓冲池</h3></div><div class="block-actions"><span class="block-meta" id="frameCapacity">LIVE STATS</span><button class="mini-btn" id="flushBtn" type="button">刷新落盘</button></div></div><div class="buffer-readout"><strong id="hitRate">0.0%</strong><span>命中率</span><em id="bufferDelta">等待查询</em></div><div class="meter"><span id="hitMeter"></span></div><div class="buffer-grid" id="bufferGrid"></div><div class="buffer-legend"><span><i class="hot"></i>已占用</span><span><i class="clean"></i>空闲</span><span><i class="dirty"></i>脏页</span><span><i class="pinned"></i>固定</span></div><div class="buffer-stats"><span>命中 <b id="hits">0</b></span><span>未命中 <b id="misses">0</b></span><span>淘汰 <b id="evictions">0</b></span><span>磁盘读 <b id="reads">0</b></span><span>磁盘写 <b id="writes">0</b></span><span>脏页 <b id="dirtyFrames">0</b></span></div></section>
+      <section class="insight-block optimizer-block"><div class="block-title"><div><span class="eyebrow">编译器</span><h3>执行计划</h3></div><span class="check" id="planCheck">○</span></div><div class="plan-output" id="planOutput">点击“查看计划”，或直接运行一条 SQL。</div></section>
+      <section class="insight-block concurrency-block" id="concurrency"><div class="block-title"><div><span class="eyebrow">并发实验</span><h3>会话与锁</h3></div><label class="timeout-control">锁超时 <select id="lockTimeout"><option value="5">5 秒</option><option value="15">15 秒</option><option value="30" selected>30 秒</option><option value="60">60 秒</option></select></label></div><div class="concurrency-state" id="concurrencyState">正在建立独立会话…</div><div class="lock-list" id="lockList"><p class="tree-empty">暂无锁等待</p></div></section>
+      <section class="insight-block log-block"><div class="block-title"><div><span class="eyebrow">轨迹</span><h3>事件日志</h3></div><div class="block-actions"><span class="block-meta">LATEST FIRST</span><button class="mini-btn" id="clearLog" type="button">清空</button></div></div><div class="event-log" id="eventLog"><div><time>--:--:--</time><span></span><p>正在连接本地数据库引擎</p></div></div></section>
+    </aside>
+  </main>
+
+  <footer class="statusbar"><span><i class="signal"></i> 本地引擎已连接</span><span>LRU · 16 个页框</span><span>已提交读</span><span>MiniDB 编译器 0.4 · 无外部网络</span></footer>
+  <script src="studio.js?v=9"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+# Runtime and generated files
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+*.dat
+*.dat.free
+*.db
+*.sqlite
+*.sqlite3
+
+# Local data and temporary test/demo workspaces
+data/
+demo_data/
+tmp/
+9_13_test/
+frontend_test_data/
+refactor_demo/
+rowlock_demo/
+semantic_check_demo/
+split_demo/
+split_equiv_demo/
+test1/
+verify_demo/
+
+# IDE and local environment files
+.idea/
+.vscode/
+.venv/
+venv/
+env/
+*.iml
+
+# Local OS files
+.DS_Store
+Thumbs.db
+
